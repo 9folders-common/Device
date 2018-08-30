@@ -196,15 +196,10 @@ open class Device: NSObject {
     }
     
     static open func isPlusSizePhone() -> Bool {
-        var returnValue = (Device.version() == .iPhone6Plus)
-        if returnValue == false {
-            returnValue = (Device.version() == .iPhone6SPlus)
-        }
-        if returnValue == false {
-            returnValue = (Device.version() == .iPhone7Plus)
-        }
-        if returnValue == false {
-            returnValue = (Device.version() == .iPhone8Plus)
+        let version: Version = Device.version()
+        var returnValue = false
+        if version == .iPhone6Plus || version == .iPhone6SPlus || version == .iPhone7Plus || version == .iPhone8Plus {
+            returnValue = true
         }
         return returnValue
     }
