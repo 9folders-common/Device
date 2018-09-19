@@ -117,15 +117,15 @@ open class Device: NSObject {
         }
     }
 
-    static open func version() -> Version {
+    static public func version() -> Version {
         return getVersion(code: getVersionCode())
     }
     
-    static open func versionString() -> NSString {
+    static public func versionString() -> NSString {
         return getVersion(code: getVersionCode()).rawValue
     }
     
-    static open func size() -> Size {
+    static public func size() -> Size {
         let w: Double = Double(UIScreen.main.bounds.width)
         let h: Double = Double(UIScreen.main.bounds.height)
         let screenHeight: Double = max(w, h)
@@ -153,50 +153,50 @@ open class Device: NSObject {
         }
     }
     
-    static open func type() -> Type {
+    static public func type() -> Type {
         return getType(code: getVersionCode())
     }
     
-    static open func typeString() -> NSString {
+    static public func typeString() -> NSString {
         return getType(code: getVersionCode()).rawValue as NSString
     }
 
     @available(*, deprecated, message: "use == operator instead")
-    static open func isEqualToScreenSize(_ size: Size) -> Bool {
+    static public func isEqualToScreenSize(_ size: Size) -> Bool {
         return size == self.size() ? true : false;
     }
 
     @available(*, deprecated, message: "use > operator instead")
-    static open func isLargerThanScreenSize(_ size: Size) -> Bool {
+    static public func isLargerThanScreenSize(_ size: Size) -> Bool {
         return size.rawValue < self.size().rawValue ? true : false;
     }
 
     @available(*, deprecated, message: "use < operator instead")
-    static open func isSmallerThanScreenSize(_ size: Size) -> Bool {
+    static public func isSmallerThanScreenSize(_ size: Size) -> Bool {
         return size.rawValue > self.size().rawValue ? true : false;
     }
     
-    static open func isRetina() -> Bool {
+    static public func isRetina() -> Bool {
         return UIScreen.main.scale > 1.0
     }
 
-    static open func isPad() -> Bool {
+    static public func isPad() -> Bool {
         return type() == .iPad
     }
     
-    static open func isPhone() -> Bool {
+    static public func isPhone() -> Bool {
         return type() == .iPhone
     }
     
-    static open func isPod() -> Bool {
+    static public func isPod() -> Bool {
         return type() == .iPod
     }
     
-    static open func isSimulator() -> Bool {
+    static public func isSimulator() -> Bool {
         return type() == .simulator
     }
     
-    static open func isNotchDesignPhone() -> Bool {
+    static public func isNotchDesignPhone() -> Bool {
         let version: Version = Device.version()
         var returnValue = false
         if version == .iPhoneX || version == .iPhoneXS || version == .iPhoneXR || version == .iPhoneXSMax {
@@ -205,7 +205,7 @@ open class Device: NSObject {
         return returnValue
     }
     
-    static open func isPlusSizePhone() -> Bool {
+    static public func isPlusSizePhone() -> Bool {
         let version: Version = Device.version()
         var returnValue = false
         if version == .iPhone6Plus || version == .iPhone6SPlus || version == .iPhone7Plus || version == .iPhone8Plus {
