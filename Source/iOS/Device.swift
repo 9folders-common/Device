@@ -205,7 +205,7 @@ open class Device: NSObject {
         return returnValue
     }
     
-    static public func isPlusSizePhone() -> Bool {
+    static public func isSplitablePhone() -> Bool {
         let version: Version = Device.version()
         var returnValue = false
         if version == .iPhone6Plus || version == .iPhone6SPlus || version == .iPhone7Plus || version == .iPhone8Plus /*|| version == .iPhoneXR || version == .iPhoneXSMax*/ {
