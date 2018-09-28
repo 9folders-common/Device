@@ -8,17 +8,48 @@
 
 import UIKit
 
-open class Device {
-    static fileprivate func getVersionCode() -> String {
+@objc
+open class Device: NSObject {
+    static fileprivate func getVersionCode() -> NSString {
         var systemInfo = utsname()
         uname(&systemInfo)
         
         let versionCode: String = String(validatingUTF8: NSString(bytes: &systemInfo.machine, length: Int(_SYS_NAMELEN), encoding: String.Encoding.ascii.rawValue)!.utf8String!)!
         
-        return versionCode
+        return versionCode as NSString
     }
     
-    static fileprivate func getVersion(code: String) -> Version {
+    static fileprivate func getVersionInSimulator() -> Version {
+        
+        if UIScreen.main.bounds.size.equalTo(CGSize(width: 320, height: 568)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 568, height: 320)) {
+            return .iPhoneSE // iPhone 5, 5C, 5S, iPod Touch 5g
+        }
+        if UIScreen.main.bounds.size.equalTo(CGSize(width: 375, height: 667)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 667, height: 375)) {
+            return .iPhone7 // iPhone 6, iPhone 6s, iPhone 7
+        }
+        if UIScreen.main.bounds.size.equalTo(CGSize(width: 414, height: 736)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 736, height: 414)) {
+            return .iPhone7Plus // iPhone 6 Plus, iPhone 6s Plus, iPhone 7 Plus
+        }
+        if UIScreen.main.bounds.size.equalTo(CGSize(width: 768, height: 1024)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 1024, height: 768)) {
+            return .iPadMini // iPad Mini 2, iPad Mini 3, iPad Mini 4, iPad 3, iPad 4, iPad Air, iPad Air 2, 9.7-inch iPad Pro
+        }
+        if UIScreen.main.bounds.size.equalTo(CGSize(width: 834, height: 1112)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 1112, height: 834)) {
+            return .iPadPro9_7Inch
+        }
+        if UIScreen.main.bounds.size.equalTo(CGSize(width: 1024, height: 1366)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 1366, height: 1024)) {
+            return .iPadPro12_9Inch // 12.9-inch iPad Pro
+        }
+        if UIScreen.main.bounds.size.equalTo(CGSize(width: 375, height: 812)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 812, height: 375)) {
+            return .iPhoneXS // iPhoneXS or iPhoneX
+        }
+        if UIScreen.main.bounds.size.equalTo(CGSize(width: 414, height: 896)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 896, height: 414)) {
+            return .iPhoneXSMax // iPhoneXR or iPhoneXSMax
+        }
+        
+        return .unknown
+    }
+    
+    static fileprivate func getVersion(code: NSString) -> Version {
         switch code {
             /*** iPhone ***/
             case "iPhone3,1", "iPhone3,2", "iPhone3,3":      return .iPhone4
@@ -36,7 +67,9 @@ open class Device {
             case "iPhone10,1", "iPhone10,4":                 return .iPhone8
             case "iPhone10,2", "iPhone10,5":                 return .iPhone8Plus
             case "iPhone10,3", "iPhone10,6":                 return .iPhoneX
-            
+            case "iPhone11,2":                               return .iPhoneXS
+            case "iPhone11,8":                               return .iPhoneXR
+            case "iPhone11,4", "iPhone11,6":                 return .iPhoneXSMax
 
             /*** iPad ***/
             case "iPad1,1":                                  return Version.iPad1
@@ -50,8 +83,7 @@ open class Device {
             case "iPad4,4", "iPad4,5", "iPad4,6":            return Version.iPadMini2
             case "iPad4,7", "iPad4,8", "iPad4,9":            return Version.iPadMini3
             case "iPad5,1", "iPad5,2":                       return Version.iPadMini4
-            case "iPad6,7", "iPad6,8", "iPad7,1", "iPad7,2": return Version.iPadPro12_9Inch
-            case "iPad7,3", "iPad7,4":                       return Version.iPadPro10_5Inch
+            case "iPad6,7", "iPad6,8":                       return Version.iPadPro12_9Inch
             case "iPad6,3", "iPad6,4":                       return Version.iPadPro9_7Inch
             
             /*** iPod ***/
@@ -63,13 +95,13 @@ open class Device {
             case "iPod7,1":                                  return .iPodTouch6Gen
             
             /*** Simulator ***/
-            case "i386", "x86_64":                           return .simulator
+            case "i386", "x86_64":                           return getVersionInSimulator()
 
             default:                                         return .unknown
         }
     }
     
-    static fileprivate func getType(code: String) -> Type {
+    static fileprivate func getType(code: NSString) -> Type {
         let versionCode = getVersionCode()
         
         if versionCode.contains("iPhone") {
@@ -85,11 +117,15 @@ open class Device {
         }
     }
 
-    static open func version() -> Version {
+    static public func version() -> Version {
         return getVersion(code: getVersionCode())
     }
     
-    static open func size() -> Size {
+    static public func versionString() -> NSString {
+        return getVersion(code: getVersionCode()).rawValue
+    }
+    
+    static public func size() -> Size {
         let w: Double = Double(UIScreen.main.bounds.width)
         let h: Double = Double(UIScreen.main.bounds.height)
         let screenHeight: Double = max(w, h)
@@ -103,19 +139,13 @@ open class Device {
                 return UIScreen.main.scale == 3.0 ? .screen5_5Inch : .screen4_7Inch
             case 736:
                 return .screen5_5Inch
-            case 812:
-                return .screen5_8Inch
             case 1024:
-                switch version() {
+                switch getVersion(code: getVersionCode()) {
                     case .iPadMini,.iPadMini2,.iPadMini3,.iPadMini4:
                         return .screen7_9Inch
-                    case .iPadPro10_5Inch:
-                        return .screen10_5Inch
                     default:
                         return .screen9_7Inch
                 }
-            case 1112:
-                return .screen10_5Inch
             case 1366:
                 return .screen12_9Inch
             default:
@@ -123,43 +153,65 @@ open class Device {
         }
     }
     
-    static open func type() -> Type {
+    static public func type() -> Type {
         return getType(code: getVersionCode())
+    }
+    
+    static public func typeString() -> NSString {
+        return getType(code: getVersionCode()).rawValue as NSString
     }
 
     @available(*, deprecated, message: "use == operator instead")
-    static open func isEqualToScreenSize(_ size: Size) -> Bool {
+    static public func isEqualToScreenSize(_ size: Size) -> Bool {
         return size == self.size() ? true : false;
     }
 
     @available(*, deprecated, message: "use > operator instead")
-    static open func isLargerThanScreenSize(_ size: Size) -> Bool {
+    static public func isLargerThanScreenSize(_ size: Size) -> Bool {
         return size.rawValue < self.size().rawValue ? true : false;
     }
 
     @available(*, deprecated, message: "use < operator instead")
-    static open func isSmallerThanScreenSize(_ size: Size) -> Bool {
+    static public func isSmallerThanScreenSize(_ size: Size) -> Bool {
         return size.rawValue > self.size().rawValue ? true : false;
     }
     
-    static open func isRetina() -> Bool {
+    static public func isRetina() -> Bool {
         return UIScreen.main.scale > 1.0
     }
 
-    static open func isPad() -> Bool {
+    static public func isPad() -> Bool {
         return type() == .iPad
     }
     
-    static open func isPhone() -> Bool {
+    static public func isPhone() -> Bool {
         return type() == .iPhone
     }
     
-    static open func isPod() -> Bool {
+    static public func isPod() -> Bool {
         return type() == .iPod
     }
     
-    static open func isSimulator() -> Bool {
+    static public func isSimulator() -> Bool {
         return type() == .simulator
+    }
+    
+    static public func isNotchDesignPhone() -> Bool {
+        let version: Version = Device.version()
+        var returnValue = false
+        if version == .iPhoneX || version == .iPhoneXS || version == .iPhoneXR || version == .iPhoneXSMax {
+            returnValue = true
+        }
+        return returnValue
+    }
+    
+    static public func isSplitablePhone() -> Bool {
+        let version: Version = Device.version()
+        var returnValue = false
+        if version == .iPhone6Plus || version == .iPhone6SPlus || version == .iPhone7Plus || version == .iPhone8Plus /*|| version == .iPhoneXR || version == .iPhoneXSMax*/ {
+            returnValue = true
+        }
+        return returnValue
     }
     
 }
