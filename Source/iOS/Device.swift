@@ -21,6 +21,9 @@ public class Device: NSObject {
     
     static fileprivate func getVersionInSimulator() -> Version {
         
+        if UIScreen.main.bounds.size.equalTo(CGSize(width: 320, height: 480)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 480, height: 320)) {
+            return .iPhone4 // iPhone 5, 5C, 5S, iPod Touch 5g
+        }
         if UIScreen.main.bounds.size.equalTo(CGSize(width: 320, height: 568)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 568, height: 320)) {
             return .iPhoneSE // iPhone 5, 5C, 5S, iPod Touch 5g
         }
