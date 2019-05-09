@@ -204,6 +204,10 @@ public class Device: NSObject {
         return type() == .simulator
     }
     
+    public static func canRotateSplitableNotchDesignPhone() -> Bool {
+        return false
+    }
+    
     public static func isNotchDesignPhone() -> Bool {
         let version: Version = Device.version()
         var returnValue = false
@@ -216,8 +220,15 @@ public class Device: NSObject {
     public static func isSplitablePhone() -> Bool {
         let version: Version = Device.version()
         var returnValue = false
-        if version == .iPhone6Plus || version == .iPhone6SPlus || version == .iPhone7Plus || version == .iPhone8Plus/* || version == .iPhoneXR || version == .iPhoneXSMax*/ {
-            returnValue = true
+        if canRotateSplitableNotchDesignPhone() {
+            if version == .iPhone6Plus || version == .iPhone6SPlus || version == .iPhone7Plus || version == .iPhone8Plus || version == .iPhoneXR || version == .iPhoneXSMax {
+                returnValue = true
+            }
+        }
+        else {
+            if version == .iPhone6Plus || version == .iPhone6SPlus || version == .iPhone7Plus || version == .iPhone8Plus/* || version == .iPhoneXR || version == .iPhoneXSMax*/ {
+                returnValue = true
+            }
         }
         return returnValue
     }
