@@ -223,7 +223,8 @@ public class Device: NSObject {
     }
     
     public static func isSimulator() -> Bool {
-        return type() == .simulator
+        let versionCode = getVersionCode()
+        return (versionCode == "i386" || versionCode == "x86_64")
     }
     
     public static func canRotateSplitableNotchDesignPhone() -> Bool {
