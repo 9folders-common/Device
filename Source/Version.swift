@@ -36,13 +36,19 @@ public enum Version: NSString {
     case iPad3
     case iPad4
     case iPad5
+    case iPad6
+    case iPad7_10_2Inch
     case iPadAir
     case iPadAir2
+    case iPadAir3
     case iPadMini
     case iPadMini2
     case iPadMini3
     case iPadMini4
+    case iPadMini5
     case iPadPro9_7Inch
+    case iPadPro10_5Inch
+    case iPadPro11_0Inch
     case iPadPro12_9Inch
     
     /*** iPod ***/
@@ -52,6 +58,7 @@ public enum Version: NSString {
     case iPodTouch4Gen
     case iPodTouch5Gen
     case iPodTouch6Gen
+    case iPodTouch7Gen
     
     /*** simulator ***/
     case simulator

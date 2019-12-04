@@ -21,6 +21,7 @@ public class Device: NSObject {
     
     static fileprivate func getVersionInSimulator() -> Version {
         
+        // phone
         if UIScreen.main.bounds.size.equalTo(CGSize(width: 320, height: 480)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 480, height: 320)) {
             return .iPhone4 // iPhone 5, 5C, 5S, iPod Touch 5g
         }
@@ -33,20 +34,27 @@ public class Device: NSObject {
         if UIScreen.main.bounds.size.equalTo(CGSize(width: 414, height: 736)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 736, height: 414)) {
             return .iPhone7Plus // iPhone 6 Plus, iPhone 6s Plus, iPhone 7 Plus
         }
-        if UIScreen.main.bounds.size.equalTo(CGSize(width: 768, height: 1024)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 1024, height: 768)) {
-            return .iPadMini // iPad Mini 2, iPad Mini 3, iPad Mini 4, iPad 3, iPad 4, iPad Air, iPad Air 2, 9.7-inch iPad Pro
-        }
-        if UIScreen.main.bounds.size.equalTo(CGSize(width: 834, height: 1112)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 1112, height: 834)) {
-            return .iPadPro9_7Inch
-        }
-        if UIScreen.main.bounds.size.equalTo(CGSize(width: 1024, height: 1366)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 1366, height: 1024)) {
-            return .iPadPro12_9Inch // 12.9-inch iPad Pro
-        }
         if UIScreen.main.bounds.size.equalTo(CGSize(width: 375, height: 812)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 812, height: 375)) {
             return .iPhone11Pro // iPhoneXS or iPhoneX or iPhone11Pro
         }
         if UIScreen.main.bounds.size.equalTo(CGSize(width: 414, height: 896)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 896, height: 414)) {
             return .iPhone11ProMax // iPhoneXR or iPhoneXSMax or iPhone11 or iPhone11ProMax
+        }
+        // pad
+        if UIScreen.main.bounds.size.equalTo(CGSize(width: 768, height: 1024)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 1024, height: 768)) {
+            return .iPadPro9_7Inch // iPad Mini, iPad Mini 2, iPad Mini 3, iPad Mini 4, iPad 3, iPad 4, iPad Air, iPad Air 2, 9.7-inch iPad Pro
+        }
+        if UIScreen.main.bounds.size.equalTo(CGSize(width: 810, height: 1080)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 1080, height: 810)) {
+            return .iPad7_10_2Inch
+        }
+        if UIScreen.main.bounds.size.equalTo(CGSize(width: 834, height: 1112)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 1112, height: 834)) {
+            return .iPadPro10_5Inch
+        }
+        if UIScreen.main.bounds.size.equalTo(CGSize(width: 834, height: 1194)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 1194, height: 834)) {
+            return .iPadPro11_0Inch
+        }
+        if UIScreen.main.bounds.size.equalTo(CGSize(width: 1024, height: 1366)) || UIScreen.main.bounds.size.equalTo(CGSize(width: 1366, height: 1024)) {
+            return .iPadPro12_9Inch // 12.9-inch iPad Pro
         }
         
         return .unknown
@@ -82,7 +90,6 @@ public class Device: NSObject {
             case "iPad2,1", "iPad2,2", "iPad2,3", "iPad2,4": return Version.iPad2
             case "iPad3,1", "iPad3,2", "iPad3,3":            return Version.iPad3
             case "iPad3,4", "iPad3,5", "iPad3,6":            return Version.iPad4
-            case "iPad6,11", "iPad6,12":                     return Version.iPad5
             case "iPad4,1", "iPad4,2", "iPad4,3":            return Version.iPadAir
             case "iPad5,3", "iPad5,4":                       return Version.iPadAir2
             case "iPad2,5", "iPad2,6", "iPad2,7":            return Version.iPadMini
@@ -91,6 +98,15 @@ public class Device: NSObject {
             case "iPad5,1", "iPad5,2":                       return Version.iPadMini4
             case "iPad6,7", "iPad6,8":                       return Version.iPadPro12_9Inch
             case "iPad6,3", "iPad6,4":                       return Version.iPadPro9_7Inch
+            case "iPad6,11", "iPad6,12":                     return Version.iPad5
+            case "iPad7,1", "iPad7,2":                       return Version.iPadPro12_9Inch
+            case "iPad7,3", "iPad7,4":                       return Version.iPadPro10_5Inch
+            case "iPad7,5", "iPad7,6":                       return Version.iPad6
+            case "iPad7,11", "iPad7,12":                     return Version.iPad7_10_2Inch
+            case "iPad8,1", "iPad8,2", "iPad8,3", "iPad8,4": return Version.iPadPro11_0Inch
+            case "iPad8,5", "iPad8,6", "iPad8,7", "iPad8,8": return Version.iPadPro12_9Inch
+            case "iPad11,1", "iPad11,2":                     return Version.iPadMini5
+            case "iPad11,3", "iPad11,4":                     return Version.iPadAir3
             
             /*** iPod ***/
             case "iPod1,1":                                  return .iPodTouch1Gen
@@ -99,6 +115,7 @@ public class Device: NSObject {
             case "iPod4,1":                                  return .iPodTouch4Gen
             case "iPod5,1":                                  return .iPodTouch5Gen
             case "iPod7,1":                                  return .iPodTouch6Gen
+            case "iPod9,1":                                  return .iPodTouch7Gen
             
             /*** Simulator ***/
             case "i386", "x86_64":                           return getVersionInSimulator()
@@ -169,6 +186,12 @@ public class Device: NSObject {
                     default:
                         return .screen6_5Inch
                 }
+            case 1080:
+                return .screen10_2Inch
+            case 1112:
+                return .screen10_5Inch
+            case 1194:
+                return .screen11_0Inch
             case 1024:
                 switch getVersion(code: getVersionCode()) {
                     case .iPadMini,.iPadMini2,.iPadMini3,.iPadMini4:
